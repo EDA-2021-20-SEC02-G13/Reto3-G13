@@ -26,25 +26,93 @@
 
 
 import config as cf
+import datetime
 from DISClib.ADT import list as lt
-from DISClib.ADT import map as mp
+from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
-from DISClib.Algorithms.Sorting import shellsort as sa
 assert cf
 
 """
-Se define la estructura de un catálogo de videos. El catálogo tendrá dos listas, una para los videos, otra para las categorias de
-los mismos.
+Se define la estructura de un catálogo de videos. El catálogo tendrá dos
+listas, una para los videos, otra para las categorias de los mismos.
 """
+
 
 # Construccion de modelos
 
+def newCatalog():
+    """
+    Inicializa el catalogo de UFO Sightings. Se crea una lista vacia para
+    guardar todos los avistamientos e indices para los requerimientos
+    """
+    catalog = {"ufos": None}
+
+    catalog["ufos"] = lt.newList("ARRAY_LIST")
+
+    catalog["datesIndex"] = om.newMap(omaptype="RBT",
+                                      comparefunction=compareDates)
+
+    return catalog
+
+
 # Funciones para agregar informacion al catalogo
+
+def addUfo(catalog, ufo):
+    """
+    Adiciona un avistamiento de un ovni a la lista de avistamientos,
+    esta guarda en cada posicion la informacion de cada uno
+    """
+    lt.addLast(catalog["ufos"], ufo)
+    updateDateIndex(catalog["datesIndex"], ufo)
+
+
+def updateDateIndex(datesIndex, ufo):
+    """
+    Revisa si existe o no la fecha en el mapa. En base a esto, crea una
+    nueva estructura para modelarla, o la adiciona a la lista de fechas
+    """
+    date = ufo["datetime"]
+    ufoDate = datetime.datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+    entry = om.get(datesIndex, ufoDate.date())
+    if entry is None:
+        datentry = newDate()
+        om.put(datesIndex, ufoDate.date(), datentry)
+    else:
+        datentry = me.getValue(entry)
+    lt.addLast(datentry["ltFecha"], ufo)
+
 
 # Funciones para creacion de datos
 
+def newDate():
+    """
+    Crea una nueva estructura para modelar los avistamientos de una fecha
+    """
+    datentry = {"ltFecha": None}
+    datentry["ltFecha"] = lt.newList("ARRAY_LIST", compareDates)
+    return datentry
+
+
 # Funciones de consulta
 
-# Funciones utilizadas para comparar elementos dentro de una lista
+def ufosSize(catalog):
+    """
+    Retorna el numero de avistamientos cargados
+    """
+    return lt.size(catalog["ufos"])
+
+
+# Funciones de comparacion
+
+def compareDates(date1, date2):
+    """
+    Compara dos fechas de dos avistamientos de ovnis
+    """
+    if (date1 == date2):
+        return 0
+    elif (date1 > date2):
+        return 1
+    else:
+        return -1
 
 # Funciones de ordenamiento

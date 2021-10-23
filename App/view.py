@@ -22,6 +22,7 @@
 
 import config as cf
 import sys
+import time
 import controller
 from DISClib.ADT import list as lt
 assert cf
@@ -34,23 +35,83 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+default_limit = 1000
+sys.setrecursionlimit(default_limit*10)
+
+
+# Funciones para la impresión de resultados
+
+def printCargaArchivos(catalog, sizeUfos):
+    """
+    Imprime los datos requeridos para la carga de archivos
+    """
+    print("-"*62)
+    print("Avistamientos cargados: " + str(sizeUfos))
+    print("-"*62)
+    for pos in range(1, 6):
+        print(str(pos) + ":", lt.getElement(catalog["ufos"], pos))
+    for pos in range(sizeUfos-4, sizeUfos+1):
+        print(str(pos) + ":", lt.getElement(catalog["ufos"], pos))
+    print("-"*62)
+
+
+# Menu de opciones
+
 def printMenu():
-    print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- ")
+    print("\n" + "-"*20 + " Bienvenido al Reto 3 " + "-"*20)
+    print("0 - Crear catalogo y cargar su información")
+    print("1 - Req 1. Contar los avistamientos en una ciudad")
+    print("2 - Req 2. Contar los avistamientos por duracion")
+    print("3 - Req 3. Contar avistamientos por Hora/Minutos del dia")
+    print("4 - Req 4. Contar los avistamientos en un rango de fechas")
+    print("5 - Req 5. Contar los avistamientos de una zona geografica")
+    print("6 - Bono. Visualizar los avistamientos de una zona geografica")
+    print("7 - Salir de la aplicación")
+    print("-"*62)
+
+
+# Menu principal
 
 catalog = None
+ufoFile = "UFOS/UFOS-utf8-small.csv"
 
 """
 Menu principal
 """
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
+    inputs = input("Seleccione una opción para continuar: ")
+
+    if int(inputs[0]) == 0:
+        print("-"*61)
         print("Cargando información de los archivos ....")
+        start_time = time.process_time()
+        #
+        catalog = controller.initCatalog()
+        controller.loadData(catalog, ufoFile)
+        sizeUfos = controller.ufosSize(catalog)
+        #
+        stop_time = time.process_time()
+        elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
+        print("Tiempo:", elapsed_time_mseg, "mseg")
+        printCargaArchivos(catalog, sizeUfos)
+
+    elif int(inputs[0]) == 1:
+        pass
 
     elif int(inputs[0]) == 2:
+        pass
+
+    elif int(inputs[0]) == 3:
+        pass
+
+    elif int(inputs[0]) == 4:
+        pass
+
+    elif int(inputs[0]) == 5:
+        pass
+
+    elif int(inputs[0]) == 6:
         pass
 
     else:
