@@ -51,6 +51,7 @@ def loadData(catalog, ufoFile):
     for ufo in input_file:
         model.addUfo(catalog, ufo)
 
+
 # Funciones de ordenamiento
 
 
@@ -61,3 +62,27 @@ def ufosSize(catalog):
     Retorna el numero de avistamientos cargados
     """
     return model.ufosSize(catalog)
+
+
+def getCityInfo(catalog, ciudad):
+    """
+    Obtiene el total de ciudades que han reportado avistamientos de ovnis,
+    los avistamientos de una ciudad en especifico y su total
+    """
+    return model.getCityInfo(catalog, ciudad)
+
+
+def getSecondInfo(catalog, sec1, sec2):
+    """
+    Obtiene el total de duraciones, la duracion en segundos mas larga, su
+    total, los avistamientos en el rango, y la cantidad de dichos avistamientos
+    """
+    return model.getSecondInfo(catalog, sec1, sec2)
+
+
+def getDateInfo(catalog, fecha1, fecha2):
+    """
+    Obtiene la fecha mas antigua del mapa, la cantidad de fechas, los valores
+    dentro del rango dado y su total
+    """
+    return model.getDateInfo(catalog, fecha1, fecha2)

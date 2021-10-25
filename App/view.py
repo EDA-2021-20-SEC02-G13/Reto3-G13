@@ -25,6 +25,7 @@ import sys
 import time
 import controller
 from DISClib.ADT import list as lt
+from prettytable import PrettyTable, ALL
 assert cf
 
 
@@ -53,6 +54,124 @@ def printCargaArchivos(catalog, sizeUfos):
     for pos in range(sizeUfos-4, sizeUfos+1):
         print(str(pos) + ":", lt.getElement(catalog["ufos"], pos))
     print("-"*62)
+
+
+def printCityUfos(ciudad, total, ltCiudad, ciudadTotal):
+    """
+    Imprime los datos requeridos para el requerimiento 1
+    """
+    tbCity = PrettyTable(["datetime", "city", "state", "country", "shape",
+                          "duration (seconds)"])
+    for pos in range(1, 4):
+        ufo = lt.getElement(ltCiudad, pos)
+        tbCity.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                        ufo["country"], ufo["shape"],
+                        ufo["duration (seconds)"]])
+    if ciudadTotal == 4:
+        ufo = lt.getElement(ltCiudad, ciudadTotal)
+        tbCity.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                        ufo["country"], ufo["shape"],
+                        ufo["duration (seconds)"]])
+    elif ciudadTotal == 5:
+        for pos in range(ciudadTotal-1, ciudadTotal+1):
+            ufo = lt.getElement(ltCiudad, pos)
+            tbCity.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                            ufo["country"], ufo["shape"],
+                            ufo["duration (seconds)"]])
+    elif ciudadTotal > 5:
+        for pos in range(ciudadTotal-2, ciudadTotal+1):
+            ufo = lt.getElement(ltCiudad, pos)
+            tbCity.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                            ufo["country"], ufo["shape"],
+                            ufo["duration (seconds)"]])
+    tbCity.max_width = 40
+    tbCity.hrules = ALL
+    print("\n" + "-"*23 + " Req 1. Answer " + "-"*24)
+    print("There are " + str(total) + " different cities with UFO sightings.")
+    print("\n" + "There are " + str(ciudadTotal) + " sightings at the "
+          + ciudad + " city.")
+    print("The first 3 and last 3 UFO sightings in the city are:")
+    print(tbCity)
+
+
+def printSecondsUfos(s1, s2, total, mayor, totalMayor, ltRango, totalRango):
+    """
+    Imprime los datos requeridos para el requerimiento 2
+    """
+    tbSeconds = PrettyTable(["datetime", "city", "state", "country", "shape",
+                             "duration (seconds)"])
+    for pos in range(1, 4):
+        ufo = lt.getElement(ltRango, pos)
+        tbSeconds.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                           ufo["country"], ufo["shape"],
+                           ufo["duration (seconds)"]])
+    if totalRango == 4:
+        ufo = lt.getElement(ltRango, totalRango)
+        tbSeconds.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                          ufo["country"], ufo["shape"],
+                          ufo["duration (seconds)"]])
+    elif totalRango == 5:
+        for pos in range(totalRango-1, totalRango+1):
+            ufo = lt.getElement(ltRango, pos)
+            tbSeconds.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                               ufo["country"], ufo["shape"],
+                               ufo["duration (seconds)"]])
+    elif totalRango > 5:
+        for pos in range(totalRango-2, totalRango+1):
+            ufo = lt.getElement(ltRango, pos)
+            tbSeconds.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                               ufo["country"], ufo["shape"],
+                               ufo["duration (seconds)"]])
+    tbSeconds.max_width = 40
+    tbSeconds.hrules = ALL
+    print("\n" + "-"*23 + " Req 2. Answer " + "-"*24)
+    print("There are " + str(total) + " different UFO sightings durations.")
+    print("The largest duration is " + str(mayor) + " seconds, with "
+          + str(totalMayor) + " UFO sightings.")
+    print("\n" + "There are " + str(totalRango) + " sightings between: "
+          + str(s1) + " and " + str(s2) + " duration.")
+    print("The first 3 and last 3 UFO sightings in the duration time are:")
+    print(tbSeconds)
+
+
+def printDatesUfos(f1, f2, total, menor, ltRango, totalRango):
+    """
+    Imprime los datos requeridos para el requerimiento 4
+    """
+    tbDates = PrettyTable(["datetime", "city", "state", "country", "shape",
+                           "duration (seconds)"])
+    for pos in range(1, 4):
+        ufo = lt.getElement(ltRango, pos)
+        tbDates.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                         ufo["country"], ufo["shape"],
+                         ufo["duration (seconds)"]])
+    if totalRango == 4:
+        ufo = lt.getElement(ltRango, totalRango)
+        tbDates.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                         ufo["country"], ufo["shape"],
+                         ufo["duration (seconds)"]])
+    elif totalRango == 5:
+        for pos in range(totalRango-1, totalRango+1):
+            ufo = lt.getElement(ltRango, pos)
+            tbDates.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                             ufo["country"], ufo["shape"],
+                             ufo["duration (seconds)"]])
+    elif totalRango > 5:
+        for pos in range(totalRango-2, totalRango+1):
+            ufo = lt.getElement(ltRango, pos)
+            tbDates.add_row([ufo["datetime"], ufo["city"], ufo["state"],
+                             ufo["country"], ufo["shape"],
+                             ufo["duration (seconds)"]])
+    tbDates.max_width = 40
+    tbDates.hrules = ALL
+    print("\n" + "-"*23 + " Req 4. Answer " + "-"*24)
+    print("There are " + str(total) + " different UFO sightings dates "
+          + "[YYYY-MM-DD].")
+    print("The oldest date is " + str(menor))
+    print("\n" + "There are " + str(totalRango) + " sightings between: "
+          + str(f1) + " and " + str(f2))
+    print("The first 3 and last 3 UFO sightings in this time are:")
+    print(tbDates)
 
 
 # Menu de opciones
@@ -97,16 +216,60 @@ while True:
         printCargaArchivos(catalog, sizeUfos)
 
     elif int(inputs[0]) == 1:
-        pass
+        print("\n" + "-"*23 + " Req 1. Inputs " + "-"*24)
+        ciudad = str(input("Indique la ciudad que desea de buscar: "))
+        start_time = time.process_time()
+        #
+        tplCiudad = controller.getCityInfo(catalog, ciudad)
+        #
+        stop_time = time.process_time()
+        elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
+        print("Tiempo:", elapsed_time_mseg, "mseg")
+        printCityUfos(ciudad, tplCiudad[0], tplCiudad[1], tplCiudad[2])
 
     elif int(inputs[0]) == 2:
-        pass
+        print("\n" + "-"*23 + " Req 2. Inputs " + "-"*24)
+        sec1 = float(input("Indique la duracion inicial con la que desea"
+                           " iniciar el rango: "))
+        sec2 = float(input("Indique la duracion final con la que desea"
+                           " finalizar el rango: "))
+        start_time = time.process_time()
+        #
+        tplRangeSecond = controller.getSecondInfo(catalog, sec1, sec2)
+        total = tplRangeSecond[0]
+        mayor = tplRangeSecond[1]
+        totalMayor = tplRangeSecond[2]
+        ltRangoSecond = tplRangeSecond[3]
+        totalRangoSecond = tplRangeSecond[4]
+        #
+        stop_time = time.process_time()
+        elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
+        print("Tiempo:", elapsed_time_mseg, "mseg")
+        printSecondsUfos(sec1, sec2, total, mayor, totalMayor, ltRangoSecond,
+                         totalRangoSecond)
 
     elif int(inputs[0]) == 3:
         pass
 
     elif int(inputs[0]) == 4:
-        pass
+        print("\n" + "-"*23 + " Req 4. Inputs " + "-"*24)
+        fecha1 = input("Indique la fecha inicial con la que desea"
+                       " iniciar el rango: ")
+        fecha2 = input("Indique la fecha final con la que desea"
+                       " finalizar el rango: ")
+        start_time = time.process_time()
+        #
+        tplRangeDate = controller.getDateInfo(catalog, fecha1, fecha2)
+        menor = tplRangeDate[0]
+        total = tplRangeDate[1]
+        ltRangoFecha = tplRangeDate[2]
+        totalRangoFecha = tplRangeDate[3]
+        #
+        stop_time = time.process_time()
+        elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
+        print("Tiempo:", elapsed_time_mseg, "mseg")
+        printDatesUfos(fecha1, fecha2, total, menor, ltRangoFecha,
+                       totalRangoFecha)
 
     elif int(inputs[0]) == 5:
         pass
