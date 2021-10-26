@@ -54,7 +54,7 @@ def newCatalog():
 
     catalog["ufos"] = lt.newList("ARRAY_LIST")
 
-    catalog["citiesIndex"] = mp.newMap(679,
+    catalog["citiesIndex"] = mp.newMap(19900,
                                        maptype="PROBING",
                                        loadfactor=0.5,
                                        comparefunction=compareCities)
@@ -196,7 +196,7 @@ def getSecondInfo(catalog, sec1, sec2):
     for lista in lt.iterator(ltRango1):
         for ufo in lt.iterator(lista["ltSegundos"]):
             lt.addLast(ltRango2, ufo)
-    ltRango3 = sortDateUfos(ltRango2, lt.size(ltRango2))
+    ltRango3 = sortSecondUfos(ltRango2, lt.size(ltRango2))
     return total, mayor, totalMayor, ltRango3, lt.size(ltRango2)
 
 
@@ -249,6 +249,27 @@ def cmpUfoByDate(ufo1, ufo2):
     return date1 < date2
 
 
+def cmpUfoBySecond(ufo1, ufo2):
+    """
+    Devuelve verdadero (True) si el "duration (seconds)" de ufo1 es menor que
+    el de ufo2, si son iguales, compara las ciudades y los paises
+    Args:
+        ufo1: informacion del primer avistamiento que
+              incluye su valor "duration (seconds)"
+        ufo2: informacion del segundo avistamiento que
+              incluye su valor "duration (seconds)"
+    """
+    ans1 = float(ufo1["duration (seconds)"])
+    ans2 = float(ufo2["duration (seconds)"])
+    if ans1 == ans2:
+        ans1 = ufo1["city"]
+        ans2 = ufo1["city"]
+        if ans1 == ans2:
+            ans1 = ufo1["country"]
+            ans2 = ufo1["country"]
+    return ans1 < ans2
+
+
 def compareSeconds(sec1, sec2):
     """
     Compara dos tiempos de duracion en segundos de avistamientos
@@ -282,4 +303,14 @@ def sortDateUfos(ufos, sizeUfos):
     sub_list = lt.subList(ufos, 1, sizeUfos)
     sub_list = sub_list.copy()
     sorted_list = ms.sort(sub_list, cmpUfoByDate)
+    return sorted_list
+
+
+def sortSecondUfos(ufos, sizeUfos):
+    """
+    Ordena los avistamientos por su duracion en segundos
+    """
+    sub_list = lt.subList(ufos, 1, sizeUfos)
+    sub_list = sub_list.copy()
+    sorted_list = ms.sort(sub_list, cmpUfoBySecond)
     return sorted_list
