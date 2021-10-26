@@ -263,10 +263,10 @@ def cmpUfoBySecond(ufo1, ufo2):
     ans2 = float(ufo2["duration (seconds)"])
     if ans1 == ans2:
         ans1 = ufo1["city"]
-        ans2 = ufo1["city"]
+        ans2 = ufo2["city"]
         if ans1 == ans2:
             ans1 = ufo1["country"]
-            ans2 = ufo1["country"]
+            ans2 = ufo2["country"]
     return ans1 < ans2
 
 
