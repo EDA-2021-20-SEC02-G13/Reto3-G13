@@ -52,9 +52,6 @@ def loadData(catalog, ufoFile):
         model.addUfo(catalog, ufo)
 
 
-# Funciones de ordenamiento
-
-
 # Funciones de consulta sobre el catálogo
 
 def ufosSize(catalog):
@@ -86,3 +83,11 @@ def getDateInfo(catalog, fecha1, fecha2):
     dentro del rango dado y su total
     """
     return model.getDateInfo(catalog, fecha1, fecha2)
+
+
+def getGeographicInfo(catalog, log1, log2, lat1, lat2):
+    """
+    Obtiene el numero de avistamientos de una zona geografica, definida por la
+    longitud y latitud de los parametros
+    """
+    return model.getGeographicInfo(catalog, log1, log2, lat1, lat2)

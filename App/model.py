@@ -50,7 +50,8 @@ def newCatalog():
     catalog = {"ufos": None,
                "citiesIndex": None,
                "secondsIndex": None,
-               "datesIndex": None}
+               "datesIndex": None,
+               "longitudeIndex": None}
 
     catalog["ufos"] = lt.newList("ARRAY_LIST")
 
@@ -64,6 +65,9 @@ def newCatalog():
 
     catalog["datesIndex"] = om.newMap(omaptype="RBT",
                                       comparefunction=compareDates)
+
+    catalog["longitudeIndex"] = om.newMap(omaptype="RBT",
+                                          comparefunction=compareLongitude)
 
     return catalog
 
@@ -79,6 +83,7 @@ def addUfo(catalog, ufo):
     updateCityIndex(catalog["citiesIndex"], ufo)
     updateSecondIndex(catalog["secondsIndex"], ufo)
     updateDateIndex(catalog["datesIndex"], ufo)
+    updateLongitudeIndex(catalog["longitudeIndex"], ufo)
 
 
 def updateCityIndex(citiesIndex, ufo):
@@ -127,6 +132,36 @@ def updateDateIndex(datesIndex, ufo):
     lt.addLast(datentry["ltFecha"], ufo)
 
 
+def updateLongitudeIndex(longitudeIndex, ufo):
+    """
+    Revisa si existe o no la longitud en el mapa. En base a esto, crea una
+    nueva estructura para modelarla, o la adiciona a la lista de avistamientos
+    """
+    longitude = round(float(ufo["longitude"]), 2)
+    entry = om.get(longitudeIndex, longitude)
+    if entry is None:
+        latitudentry = newLatitude()
+        om.put(longitudeIndex, longitude, latitudentry)
+    else:
+        latitudentry = me.getValue(entry)
+    updateLatitudeIndex(latitudentry["latitudeIndex"], ufo)
+
+
+def updateLatitudeIndex(latitudeIndex, ufo):
+    """
+    Revisa si existe o no la latitud en el mapa. En base a esto, crea una
+    nueva estructura para modelarla, o la adiciona a la lista de avistamientos
+    """
+    latitude = round(float(ufo["latitude"]), 2)
+    entry = om.get(latitudeIndex, latitude)
+    if entry is None:
+        latentry = newLatitudelist()
+        om.put(latitudeIndex, latitude, latentry)
+    else:
+        latentry = me.getValue(entry)
+    lt.addLast(latentry["ltLatitude"], ufo)
+
+
 # Funciones para creacion de datos
 
 def newCity():
@@ -155,6 +190,25 @@ def newDate():
     datentry = {"ltFecha": None}
     datentry["ltFecha"] = lt.newList("ARRAY_LIST", compareDates)
     return datentry
+
+
+def newLatitude():
+    """
+    Crea una nueva estructura para modelar los avistamientos de una latitud
+    """
+    latitudentry = {"latitudeIndex": None}
+    latitudentry["latitudeIndex"] = om.newMap(omaptype="RBT",
+                                              comparefunction=compareLatitude)
+    return latitudentry
+
+
+def newLatitudelist():
+    """
+    Crea una nueva estructura para modelar los avistamientos de una latitud
+    """
+    latentry = {"ltLatitude": None}
+    latentry["ltLatitude"] = lt.newList("ARRAY_LIST", compareDates)
+    return latentry
 
 
 # Funciones de consulta
@@ -217,6 +271,23 @@ def getDateInfo(catalog, fecha1, fecha2):
             lt.addLast(ltRango2, ufo)
     ltRango3 = sortDateUfos(ltRango2, lt.size(ltRango2))
     return menor, total, ltRango3, lt.size(ltRango2)
+
+
+def getGeographicInfo(catalog, log1, log2, lat1, lat2):
+    """
+    Obtiene el numero de avistamientos de una zona geografica, definida por la
+    longitud y latitud de los parametros
+    """
+    mapLongitudes = catalog["longitudeIndex"]
+    ltLongitudes = om.values(mapLongitudes, log1, log2)
+    ltTotal = lt.newList("ARRAY_LIST")
+    for mapLatitudes in lt.iterator(ltLongitudes):
+        ltLatitudes = om.values(mapLatitudes["latitudeIndex"], lat1, lat2)
+        for latitude in lt.iterator(ltLatitudes):
+            for ufo in lt.iterator(latitude["ltLatitude"]):
+                lt.addLast(ltTotal, ufo)
+    ltOrdenada = sortDateUfos(ltTotal, lt.size(ltTotal))
+    return lt.size(ltOrdenada), ltOrdenada
 
 
 # Funciones de comparacion
@@ -289,6 +360,30 @@ def compareDates(date1, date2):
     if (date1 == date2):
         return 0
     elif (date1 > date2):
+        return 1
+    else:
+        return -1
+
+
+def compareLongitude(log1, log2):
+    """
+    Compara dos coordenadas de longitud de dos avistamientos de ovnis
+    """
+    if (log1 == log2):
+        return 0
+    elif (log1 > log2):
+        return 1
+    else:
+        return -1
+
+
+def compareLatitude(lat1, lat2):
+    """
+    Compara dos coordenadas de latitud de dos avistamientos de ovnis
+    """
+    if (lat1 == lat2):
+        return 0
+    elif (lat1 > lat2):
         return 1
     else:
         return -1
