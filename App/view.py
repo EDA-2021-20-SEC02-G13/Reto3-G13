@@ -152,7 +152,7 @@ def printSecondsUfos(s1, s2, total, mayor, totalMayor, ltRango, totalRango):
     print(tbSeconds)
 
 
-def printDatesUfos(f1, f2, total, menor, ltRango, totalRango):
+def printDatesUfos(f1, f2, total, menor, totalMenor, ltRango, totalRango):
     """
     Imprime los datos requeridos para el requerimiento 4
     """
@@ -189,7 +189,8 @@ def printDatesUfos(f1, f2, total, menor, ltRango, totalRango):
     print("\n" + "-"*23 + " Req 4. Answer " + "-"*24)
     print("There are " + str(total) + " different UFO sightings dates "
           + "[YYYY-MM-DD].")
-    print("The oldest date is " + str(menor))
+    print("The oldest date is " + str(menor) + " with "
+          + str(totalMenor) + " UFO sightings.")
     print("\n" + "There are " + str(totalRango) + " sightings between: "
           + str(f1) + " and " + str(f2))
     print("The first 3 and last 3 UFO sightings in this time are:")
@@ -344,15 +345,16 @@ while True:
         #
         tplRangeDate = controller.getDateInfo(catalog, fecha1, fecha2)
         menor = tplRangeDate[0]
-        total = tplRangeDate[1]
-        ltRangoFecha = tplRangeDate[2]
-        totalRangoFecha = tplRangeDate[3]
+        totalMenor = tplRangeDate[1]
+        total = tplRangeDate[2]
+        ltRangoFecha = tplRangeDate[3]
+        totalRangoFecha = tplRangeDate[4]
         #
         stop_time = time.process_time()
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
-        printDatesUfos(fecha1, fecha2, total, menor, ltRangoFecha,
-                       totalRangoFecha)
+        printDatesUfos(fecha1, fecha2, total, menor, totalMenor,
+                       ltRangoFecha, totalRangoFecha)
 
     elif int(inputs[0]) == 5:
         print("\n" + "-"*23 + " Req 5. Inputs " + "-"*24)
