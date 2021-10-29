@@ -289,8 +289,7 @@ def getGeographicInfo(catalog, log1, log2, lat1, lat2):
         for latitude in lt.iterator(ltLatitudes):
             for ufo in lt.iterator(latitude["ltLatitude"]):
                 lt.addLast(ltTotal, ufo)
-    ltOrdenada = sortDateUfos(ltTotal, lt.size(ltTotal))
-    return lt.size(ltOrdenada), ltOrdenada
+    return lt.size(ltTotal), ltTotal
 
 
 # Funciones de comparacion

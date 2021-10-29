@@ -79,7 +79,7 @@ def printCityUfos(ciudad, total, ltCiudad, ciudadTotal):
                         ufo["country"], ufo["shape"],
                         ufo["duration (seconds)"]])
         u += 1
-        if u > total:
+        if u > ciudadTotal:
             break
     if ciudadTotal == 4:
         ufo = lt.getElement(ltCiudad, ciudadTotal)
@@ -121,7 +121,7 @@ def printSecondsUfos(s1, s2, total, mayor, totalMayor, ltRango, totalRango):
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"]])
         u += 1
-        if u > total:
+        if u > totalRango:
             break
     if totalRango == 4:
         ufo = lt.getElement(ltRango, totalRango)
@@ -165,7 +165,7 @@ def printDatesUfos(f1, f2, total, menor, totalMenor, ltRango, totalRango):
                          ufo["country"], ufo["shape"],
                          ufo["duration (seconds)"]])
         u += 1
-        if u > total:
+        if u > totalRango:
             break
     if totalRango == 4:
         ufo = lt.getElement(ltRango, totalRango)
@@ -221,30 +221,28 @@ def printGeoUfos(total, geoUfos):
                        ufo["longitude"]])
     elif total == 7:
         for pos in range(total-1, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
                            ufo["longitude"]])
     elif total == 8:
         for pos in range(total-2, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
                            ufo["longitude"]])
     elif total == 9:
         for pos in range(total-3, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
                            ufo["longitude"]])
-    elif total == 10:
+    elif total > 9:
         for pos in range(total-4, total+1):
-            tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
-                           ufo["country"], ufo["shape"],
-                           ufo["duration (seconds)"], ufo["latitude"],
-                           ufo["longitude"]])
-    elif total > 10:
-        for pos in range(total-5, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
@@ -276,7 +274,7 @@ def printMenu():
 # Menu principal
 
 catalog = None
-ufoFile = "UFOS/UFOS-utf8-small.csv"
+ufoFile = "UFOS/UFOS-utf8-large.csv"
 
 """
 Menu principal
@@ -366,10 +364,6 @@ while True:
                                  " iniciar el rango: ")), 2)
         lat2 = round(float(input("Indique la latitud final con la que desea"
                                  " finalizar el rango: ")), 2)
-        log2 = -103.00
-        log1 = -109.05
-        lat1 = 31.33
-        lat2 = 37.00
         start_time = time.process_time()
         #
         tplGeo = controller.getGeographicInfo(catalog, log1, log2, lat1, lat2)
