@@ -190,7 +190,7 @@ def newCity():
     Crea una nueva estructura para modelar los avistamientos de una ciudad
     """
     cityentry = {"ltFecha": None}
-    cityentry["ltFecha"] = lt.newList("ARRAY_LIST", compareDates)
+    cityentry["ltFecha"] = lt.newList("ARRAY_LIST")
     return cityentry
 
 
@@ -200,7 +200,7 @@ def newSecond():
     en segundos
     """
     secondEntry = {"ltSegundos": None}
-    secondEntry["ltSegundos"] = lt.newList("ARRAY_LIST", compareDates)
+    secondEntry["ltSegundos"] = lt.newList("ARRAY_LIST")
     return secondEntry
 
 def newTime():
@@ -216,7 +216,7 @@ def newDate():
     Crea una nueva estructura para modelar los avistamientos de una fecha
     """
     datentry = {"ltFecha": None}
-    datentry["ltFecha"] = lt.newList("ARRAY_LIST", compareDates)
+    datentry["ltFecha"] = lt.newList("ARRAY_LIST")
     return datentry
 
 
@@ -235,7 +235,7 @@ def newLatitudelist():
     Crea una nueva estructura para modelar los avistamientos de una latitud
     """
     latentry = {"ltLatitude": None}
-    latentry["ltLatitude"] = lt.newList("ARRAY_LIST", compareDates)
+    latentry["ltLatitude"] = lt.newList("ARRAY_LIST")
     return latentry
 
 
@@ -312,13 +312,16 @@ def getDateInfo(catalog, fecha1, fecha2):
     mapFechas = catalog["datesIndex"]
     total = lt.size(om.keySet(mapFechas))
     menor = om.minKey(mapFechas)
+    parejaMenor = om.get(mapFechas, menor)
+    dictMenor = me.getValue(parejaMenor)
+    totalMenor = lt.size(dictMenor["ltFecha"])
     ltRango1 = om.values(mapFechas, f1, f2)
     ltRango2 = lt.newList("ARRAY_LIST")
     for lista in lt.iterator(ltRango1):
         for ufo in lt.iterator(lista["ltFecha"]):
             lt.addLast(ltRango2, ufo)
     ltRango3 = sortDateUfos(ltRango2, lt.size(ltRango2))
-    return menor, total, ltRango3, lt.size(ltRango2)
+    return menor, totalMenor, total, ltRango3, lt.size(ltRango2)
 
 
 def getGeographicInfo(catalog, log1, log2, lat1, lat2):
@@ -334,8 +337,7 @@ def getGeographicInfo(catalog, log1, log2, lat1, lat2):
         for latitude in lt.iterator(ltLatitudes):
             for ufo in lt.iterator(latitude["ltLatitude"]):
                 lt.addLast(ltTotal, ufo)
-    ltOrdenada = sortDateUfos(ltTotal, lt.size(ltTotal))
-    return lt.size(ltOrdenada), ltOrdenada
+    return lt.size(ltTotal), ltTotal
 
 
 # Funciones de comparacion

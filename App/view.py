@@ -79,7 +79,7 @@ def printCityUfos(ciudad, total, ltCiudad, ciudadTotal):
                         ufo["country"], ufo["shape"],
                         ufo["duration (seconds)"]])
         u += 1
-        if u > total:
+        if u > ciudadTotal:
             break
     if ciudadTotal == 4:
         ufo = lt.getElement(ltCiudad, ciudadTotal)
@@ -121,7 +121,7 @@ def printSecondsUfos(s1, s2, total, mayor, totalMayor, ltRango, totalRango):
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"]])
         u += 1
-        if u > total:
+        if u > totalRango:
             break
     if totalRango == 4:
         ufo = lt.getElement(ltRango, totalRango)
@@ -211,7 +211,7 @@ def printTimessUfos(f1, f2, total, menor, ltRango, totalRango):
     print(tbDates)
 
 
-def printDatesUfos(f1, f2, total, menor, ltRango, totalRango):
+def printDatesUfos(f1, f2, total, menor, totalMenor, ltRango, totalRango):
     """
     Imprime los datos requeridos para el requerimiento 4
     """
@@ -224,7 +224,7 @@ def printDatesUfos(f1, f2, total, menor, ltRango, totalRango):
                          ufo["country"], ufo["shape"],
                          ufo["duration (seconds)"]])
         u += 1
-        if u > total:
+        if u > totalRango:
             break
     if totalRango == 4:
         ufo = lt.getElement(ltRango, totalRango)
@@ -248,7 +248,8 @@ def printDatesUfos(f1, f2, total, menor, ltRango, totalRango):
     print("\n" + "-"*23 + " Req 4. Answer " + "-"*24)
     print("There are " + str(total) + " different UFO sightings dates "
           + "[YYYY-MM-DD].")
-    print("The oldest date is " + str(menor))
+    print("The oldest date is " + str(menor) + " with "
+          + str(totalMenor) + " UFO sightings.")
     print("\n" + "There are " + str(totalRango) + " sightings between: "
           + str(f1) + " and " + str(f2))
     print("The first 3 and last 3 UFO sightings in this time are:")
@@ -279,30 +280,28 @@ def printGeoUfos(total, geoUfos):
                        ufo["longitude"]])
     elif total == 7:
         for pos in range(total-1, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
                            ufo["longitude"]])
     elif total == 8:
         for pos in range(total-2, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
                            ufo["longitude"]])
     elif total == 9:
         for pos in range(total-3, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
                            ufo["longitude"]])
-    elif total == 10:
+    elif total > 9:
         for pos in range(total-4, total+1):
-            tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
-                           ufo["country"], ufo["shape"],
-                           ufo["duration (seconds)"], ufo["latitude"],
-                           ufo["longitude"]])
-    elif total > 10:
-        for pos in range(total-5, total+1):
+            ufo = lt.getElement(geoUfos, pos)
             tbGeo.add_row([ufo["datetime"], ufo["city"], ufo["state"],
                            ufo["country"], ufo["shape"],
                            ufo["duration (seconds)"], ufo["latitude"],
@@ -334,7 +333,7 @@ def printMenu():
 # Menu principal
 
 catalog = None
-ufoFile = "UFOS/UFOS-utf8-small.csv"
+ufoFile = "UFOS/UFOS-utf8-large.csv"
 
 """
 Menu principal
@@ -421,15 +420,16 @@ while True:
         #
         tplRangeDate = controller.getDateInfo(catalog, fecha1, fecha2)
         menor = tplRangeDate[0]
-        total = tplRangeDate[1]
-        ltRangoFecha = tplRangeDate[2]
-        totalRangoFecha = tplRangeDate[3]
+        totalMenor = tplRangeDate[1]
+        total = tplRangeDate[2]
+        ltRangoFecha = tplRangeDate[3]
+        totalRangoFecha = tplRangeDate[4]
         #
         stop_time = time.process_time()
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
-        printDatesUfos(fecha1, fecha2, total, menor, ltRangoFecha,
-                       totalRangoFecha)
+        printDatesUfos(fecha1, fecha2, total, menor, totalMenor,
+                       ltRangoFecha, totalRangoFecha)
 
     elif int(inputs[0]) == 5:
         print("\n" + "-"*23 + " Req 5. Inputs " + "-"*24)
@@ -441,10 +441,6 @@ while True:
                                  " iniciar el rango: ")), 2)
         lat2 = round(float(input("Indique la latitud final con la que desea"
                                  " finalizar el rango: ")), 2)
-        log2 = -103.00
-        log1 = -109.05
-        lat1 = 31.33
-        lat2 = 37.00
         start_time = time.process_time()
         #
         tplGeo = controller.getGeographicInfo(catalog, log1, log2, lat1, lat2)
