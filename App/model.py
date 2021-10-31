@@ -25,6 +25,7 @@
  """
 
 
+from time import time
 import config as cf
 import datetime
 from DISClib.ADT import list as lt
@@ -65,6 +66,9 @@ def newCatalog():
 
     catalog["datesIndex"] = om.newMap(omaptype="RBT",
                                       comparefunction=compareDates)
+    
+    catalog["timeIndex"] = om.newMap(omaptype="RBT",
+                                      comparefunction=compareDates)
 
     catalog["longitudeIndex"] = om.newMap(omaptype="RBT",
                                           comparefunction=compareLongitude)
@@ -83,6 +87,7 @@ def addUfo(catalog, ufo):
     updateCityIndex(catalog["citiesIndex"], ufo)
     updateSecondIndex(catalog["secondsIndex"], ufo)
     updateDateIndex(catalog["datesIndex"], ufo)
+    updateTimeIndex(catalog['timeIndex'], ufo)
     updateLongitudeIndex(catalog["longitudeIndex"], ufo)
 
 
@@ -114,6 +119,22 @@ def updateSecondIndex(secondsIndex, ufo):
     else:
         secondEntry = me.getValue(entry)
     lt.addLast(secondEntry["ltSegundos"], ufo)
+
+
+def updateTimeIndex(timeIndex,ufo):
+    """
+    Revisa si existe o no la hora en el mapa. En base a esto, crea una
+    nueva estructura para modelarla, o la adiciona a la lista de avistamientos
+    """
+    time = ufo["datetime"]
+    ufoTime = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+    entry = om.get(timeIndex, ufoTime.time())
+    if entry is None:
+        datentry = newTime()
+        om.put(timeIndex, ufoTime.time(), datentry)
+    else:
+        datentry = me.getValue(entry)
+    lt.addLast(datentry["ltTiempo"], ufo)
 
 
 def updateDateIndex(datesIndex, ufo):
@@ -182,6 +203,13 @@ def newSecond():
     secondEntry["ltSegundos"] = lt.newList("ARRAY_LIST", compareDates)
     return secondEntry
 
+def newTime():
+    """
+    Crea una nueva estructura para modelar los avistamientos de una hora
+    """
+    datentry = {"ltTiempo": None}
+    datentry["ltTiempo"] = lt.newList("ARRAY_LIST", compareDates)
+    return datentry
 
 def newDate():
     """
@@ -252,6 +280,26 @@ def getSecondInfo(catalog, sec1, sec2):
             lt.addLast(ltRango2, ufo)
     ltRango3 = sortSecondUfos(ltRango2, lt.size(ltRango2))
     return total, mayor, totalMayor, ltRango3, lt.size(ltRango2)
+
+
+def getTimeInfo(catalog, tiempo1, tiempo2):
+    """
+    Obtiene la hora mas antigua del mapa, la cantidad de horas, los valores
+    dentro del rango dado y su total
+    """
+    t1 = datetime.datetime.strptime(tiempo1, "%H:%M").time()
+    t2 = datetime.datetime.strptime(tiempo2, "%H:%M").time()
+    mapFechas = catalog["timeIndex"]
+    total = lt.size(om.keySet(mapFechas))
+    menor = om.maxKey(mapFechas)
+
+    ltRango1 = om.values(mapFechas, t1, t2)
+    ltRango2 = lt.newList("ARRAY_LIST")
+    for lista in lt.iterator(ltRango1):
+        for ufo in lt.iterator(lista["ltTiempo"]):
+            lt.addLast(ltRango2, ufo)
+    ltRango3 = sortDateUfos(ltRango2, lt.size(ltRango2))
+    return menor, total, ltRango3, lt.size(ltRango2)
 
 
 def getDateInfo(catalog, fecha1, fecha2):
