@@ -66,7 +66,7 @@ def printCargaArchivos(catalog, sizeUfos):
     print("-"*62)
 
 
-def printCityUfos(ciudad, total, ltCiudad, ciudadTotal):
+def printCityUfos(ciudad, total, ltCiudad, ciudadTotal, maximo, mayor):
     """
     Imprime los datos requeridos para el requerimiento 1
     """
@@ -102,6 +102,8 @@ def printCityUfos(ciudad, total, ltCiudad, ciudadTotal):
     tbCity.hrules = ALL
     print("\n" + "-"*23 + " Req 1. Answer " + "-"*24)
     print("There are " + str(total) + " different cities with UFO sightings.")
+    print("The city with most UFO sightings is " + str(maximo) + " with "
+          + str(mayor) + " sightings.")
     print("\n" + "There are " + str(ciudadTotal) + " sightings at the "
           + ciudad + " city.")
     print("The first 3 and last 3 UFO sightings in the city are:")
@@ -200,13 +202,12 @@ def printTimessUfos(f1, f2, total, menor, ltRango, totalRango):
             last = lt.getElement(Tiempos, j)
             lt.addLast(Ultimos_5, last)
             ctn += 1
-    for no in range(1, (lt.size(Ultimos_5)+1)): 
-        xd = om.get(catalog['timeIndex'],lt.getElement(Ultimos_5,no))
+    for no in range(1, (lt.size(Ultimos_5)+1)):
+        xd = om.get(catalog['timeIndex'], lt.getElement(Ultimos_5, no))
         wuatafok = xd['value']
-        print(lt.getElement(Ultimos_5,no),lt.size(wuatafok['ltTiempo']))
-        
+        print(lt.getElement(Ultimos_5, no), lt.size(wuatafok['ltTiempo']))
     print("\n" + "There are " + str(totalRango) + " sightings between: "
-        + str(f1) + " and " + str(f2))
+          + str(f1) + " and " + str(f2))
     print("The first 3 and last 3 UFO sightings in this time are:")
     print(tbDates)
 
@@ -366,7 +367,8 @@ while True:
         stop_time = time.process_time()
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
-        printCityUfos(ciudad, tplCiudad[0], tplCiudad[1], tplCiudad[2])
+        printCityUfos(ciudad, tplCiudad[0], tplCiudad[1], tplCiudad[2],
+                      tplCiudad[3], tplCiudad[4])
 
     elif int(inputs[0]) == 2:
         print("\n" + "-"*23 + " Req 2. Inputs " + "-"*24)
@@ -392,9 +394,9 @@ while True:
     elif int(inputs[0]) == 3:
         print("\n" + "-"*23 + " Req 4. Inputs " + "-"*24)
         tiempo1 = input("Indique la hora inicial con la que desea"
-                       " iniciar el rango: ")
+                        " iniciar el rango: ")
         tiempo2 = input("Indique la hora final con la que desea"
-                       " finalizar el rango: ")
+                        " finalizar el rango: ")
         start_time = time.process_time()
         #
         tplRangeTime = controller.getTimeInfo(catalog, tiempo1, tiempo2)
@@ -407,8 +409,7 @@ while True:
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
         printTimessUfos(tiempo1, tiempo2, total, menor, ltRangoFecha,
-                       totalRangoFecha)
-        
+                        totalRangoFecha)
 
     elif int(inputs[0]) == 4:
         print("\n" + "-"*23 + " Req 4. Inputs " + "-"*24)

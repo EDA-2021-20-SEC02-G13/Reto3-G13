@@ -24,8 +24,6 @@
  * Dario Correal - Version inicial
  """
 
-
-from time import time
 import config as cf
 import datetime
 from DISClib.ADT import list as lt
@@ -52,6 +50,7 @@ def newCatalog():
                "citiesIndex": None,
                "secondsIndex": None,
                "datesIndex": None,
+               "timeIndex": None,
                "longitudeIndex": None}
 
     catalog["ufos"] = lt.newList("ARRAY_LIST")
@@ -66,9 +65,9 @@ def newCatalog():
 
     catalog["datesIndex"] = om.newMap(omaptype="RBT",
                                       comparefunction=compareDates)
-    
+
     catalog["timeIndex"] = om.newMap(omaptype="RBT",
-                                      comparefunction=compareDates)
+                                     comparefunction=compareDates)
 
     catalog["longitudeIndex"] = om.newMap(omaptype="RBT",
                                           comparefunction=compareLongitude)
@@ -121,7 +120,7 @@ def updateSecondIndex(secondsIndex, ufo):
     lt.addLast(secondEntry["ltSegundos"], ufo)
 
 
-def updateTimeIndex(timeIndex,ufo):
+def updateTimeIndex(timeIndex, ufo):
     """
     Revisa si existe o no la hora en el mapa. En base a esto, crea una
     nueva estructura para modelarla, o la adiciona a la lista de avistamientos
@@ -203,6 +202,7 @@ def newSecond():
     secondEntry["ltSegundos"] = lt.newList("ARRAY_LIST")
     return secondEntry
 
+
 def newTime():
     """
     Crea una nueva estructura para modelar los avistamientos de una hora
@@ -210,6 +210,7 @@ def newTime():
     datentry = {"ltTiempo": None}
     datentry["ltTiempo"] = lt.newList("ARRAY_LIST", compareDates)
     return datentry
+
 
 def newDate():
     """
@@ -259,7 +260,16 @@ def getCityInfo(catalog, ciudad):
     ltCiudad = dictFecha["ltFecha"]
     ciudadTotal = lt.size(ltCiudad)
     ltCiudad2 = sortDateUfos(ltCiudad, ciudadTotal)
-    return total, ltCiudad2, ciudadTotal
+    mayor = 0
+    maximo = ""
+    for key in lt.iterator(mp.keySet(catalog["citiesIndex"])):
+        dictEntry = mp.get(catalog["citiesIndex"], key)
+        valueDate = me.getValue(dictEntry)
+        ltCity = valueDate["ltFecha"]
+        if lt.size(ltCity) > mayor:
+            mayor = lt.size(ltCity)
+            maximo = key
+    return total, ltCiudad2, ciudadTotal, maximo, mayor
 
 
 def getSecondInfo(catalog, sec1, sec2):

@@ -76,12 +76,14 @@ def getSecondInfo(catalog, sec1, sec2):
     """
     return model.getSecondInfo(catalog, sec1, sec2)
 
+
 def getTimeInfo(catalog, tiempo1, tiempo2):
     """
     Obtiene la hora mas antigua del mapa, la cantidad de horas, los valores
     dentro del rango dado y su total
     """
     return model.getTimeInfo(catalog, tiempo1, tiempo2)
+
 
 def getDateInfo(catalog, fecha1, fecha2):
     """
