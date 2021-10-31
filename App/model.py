@@ -347,7 +347,8 @@ def getGeographicInfo(catalog, log1, log2, lat1, lat2):
         for latitude in lt.iterator(ltLatitudes):
             for ufo in lt.iterator(latitude["ltLatitude"]):
                 lt.addLast(ltTotal, ufo)
-    return lt.size(ltTotal), ltTotal
+    ltLatitud = sortGeoUfos(ltTotal, lt.size(ltTotal))
+    return lt.size(ltLatitud), ltLatitud
 
 
 # Funciones de comparacion
@@ -398,6 +399,24 @@ def cmpUfoBySecond(ufo1, ufo2):
         if ans1 == ans2:
             ans1 = ufo1["country"]
             ans2 = ufo2["country"]
+    return ans1 < ans2
+
+
+def cmpUfoByGeo(ufo1, ufo2):
+    """
+    Devuelve verdadero (True) si el "latitude" de ufo1 es menor que el de ufo2,
+    si son iguales, compara las longitudes
+    Args:
+        ufo1: informacion del primer avistamiento que
+              incluye su valor "latitude"
+        ufo2: informacion del segundo avistamiento que
+              incluye su valor "latitude"
+    """
+    ans1 = float(ufo1["latitude"])
+    ans2 = float(ufo2["latitude"])
+    if ans1 == ans2:
+        ans1 = ufo1["longitude"]
+        ans2 = ufo2["longitude"]
     return ans1 < ans2
 
 
@@ -468,4 +487,14 @@ def sortSecondUfos(ufos, sizeUfos):
     sub_list = lt.subList(ufos, 1, sizeUfos)
     sub_list = sub_list.copy()
     sorted_list = ms.sort(sub_list, cmpUfoBySecond)
+    return sorted_list
+
+
+def sortGeoUfos(ufos, sizeUfos):
+    """
+    Ordena los avistamientos por su latitud y longitud
+    """
+    sub_list = lt.subList(ufos, 1, sizeUfos)
+    sub_list = sub_list.copy()
+    sorted_list = ms.sort(sub_list, cmpUfoByGeo)
     return sorted_list
