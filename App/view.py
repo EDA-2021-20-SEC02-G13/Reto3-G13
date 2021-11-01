@@ -455,12 +455,13 @@ while True:
         printGeoUfos(total, geoUfos)
 
     elif int(inputs[0]) == 6:
+        print("\n" + "-"*23 + " Req 6. Inputs " + "-"*24)
         Lista_Latitudes = lt.newList('ARRAY_LIST')
         Lista_Longitudes = lt.newList('ARRAY_LIST')
-        Lista_DateTimes  = lt.newList('ARRAY_LIST')
-        Lista_Ciudades   = lt.newList('ARRAY_LIST')
-        Lista_Objeto     = lt.newList('ARRAY_LIST')
-        Lista_Duracion   = lt.newList('ARRAY_LIST')
+        Lista_DateTimes = lt.newList('ARRAY_LIST')
+        Lista_Ciudades = lt.newList('ARRAY_LIST')
+        Lista_Objeto = lt.newList('ARRAY_LIST')
+        Lista_Duracion = lt.newList('ARRAY_LIST')
         log1 = round(float(input("Indique la longitud inicial con la que desea"
                                  " iniciar el rango: ")), 2)
         log2 = round(float(input("Indique la longitud final con la que desea"
@@ -475,35 +476,40 @@ while True:
         total = tplGeo[0]
         geoUfos = tplGeo[1]
         for ele in lt.iterator(geoUfos):
-            lt.addLast(Lista_Latitudes,ele['latitude'])
-            lt.addLast(Lista_Longitudes,ele['longitude'])
-            lt.addLast(Lista_Ciudades,ele['city'])
-            lt.addLast(Lista_DateTimes,ele['datetime'])
-            lt.addLast(Lista_Objeto,ele['shape'])
-            lt.addLast(Lista_Duracion,ele['duration (seconds)'])
-        x = float(lt.getElement(Lista_Latitudes,1))
-        y = float(lt.getElement(Lista_Longitudes,1))
-        #Generar Mapa
+            lt.addLast(Lista_Latitudes, ele['latitude'])
+            lt.addLast(Lista_Longitudes, ele['longitude'])
+            lt.addLast(Lista_Ciudades, ele['city'])
+            lt.addLast(Lista_DateTimes, ele['datetime'])
+            lt.addLast(Lista_Objeto, ele['shape'])
+            lt.addLast(Lista_Duracion, ele['duration (seconds)'])
+        x = float(lt.getElement(Lista_Latitudes, 1))
+        y = float(lt.getElement(Lista_Longitudes, 1))
+        # Generar Mapa
         mapa = folium.Map(location=[x, y], zoom_start=7)
-        #General Custom Icon
-        logoIcon = folium.features.CustomIcon('Zoe.png',icon_size =(100,100))
-        #Marcas de Avistamientos
-        for pos in range(1,lt.size(Lista_Latitudes)+1):
-            coor1 = lt.getElement(Lista_Latitudes,pos)
-            coor2 = lt.getElement(Lista_Longitudes,pos)
-            info = 'Ciudad: ' + str(lt.getElement(Lista_Ciudades,pos))+' Fecha del avistamiento: '+str(lt.getElement(Lista_DateTimes,pos))
-            moreInfo = 'El objeto tenia una forma de: '+ str(lt.getElement(Lista_Objeto,pos))+ ' y fue visto durante: '+str(lt.getElement(Lista_Duracion,pos)+ ' segs')
+        # Marcas de Avistamientos
+        for pos in range(1, lt.size(Lista_Latitudes)+1):
+            coor1 = lt.getElement(Lista_Latitudes, pos)
+            coor2 = lt.getElement(Lista_Longitudes, pos)
+            a = lt.getElement(Lista_Ciudades, pos)
+            b = lt.getElement(Lista_DateTimes, pos)
+            info = 'Ciudad: ' + str(a) + ' Fecha del avistamiento: ' + str(b)
+            c = str(lt.getElement(Lista_Objeto, pos))
+            d = str(lt.getElement(Lista_Duracion, pos))
+            sent1 = 'El objeto tenia una forma de: '
+            moreInfo = sent1 + c + ' y fue visto durante: ' + d + ' segs'
             iframe = folium.IFrame(moreInfo)
-            popup  =folium.Popup(iframe,min_width = 250,max_width = 250)
-            folium.Marker([coor1,coor2],popup= popup,tooltip ="<strong>"+str(info)+"<strong>",icon= folium.Icon(icon = 'info-sign', color='purple') ).add_to(mapa)
-        #Guardar Mapa
+            popup = folium.Popup(iframe, min_width=250, max_width=250)
+            ic = 'info-sign'
+            cl = 'purple'
+            folium.Marker([coor1, coor2], popup=popup,
+                          tooltip="<strong>"+str(info)+"<strong>",
+                          icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
+        # Guardar Mapa
         mapa.save('map.html')
         stop_time = time.process_time()
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
         printGeoUfos(total, geoUfos)
-
-
 
     else:
         sys.exit(0)

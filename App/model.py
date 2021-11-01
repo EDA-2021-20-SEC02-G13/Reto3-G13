@@ -25,7 +25,6 @@
  """
 
 import config as cf
-import folium
 import datetime
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
