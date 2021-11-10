@@ -193,7 +193,7 @@ def printTimessUfos(f1, f2, total, menor, ltRango, totalRango):
     print("\n" + "-"*23 + " Req 3. Answer " + "-"*24)
     print("There are " + str(total) + " different UFO sightings dates "
           + "[hh:mm:ss].")
-    print("The 5 latest time for ufo are: ")
+    print("The 5 latest time for ufo and how many times they appear are: ")
     Tiempos = om.keySet(catalog['timeIndex'])
     ctn = 0
     for j in reversed(range(1, (lt.size(Tiempos)+1))):
@@ -335,7 +335,7 @@ def printMenu():
 # Menu principal
 
 catalog = None
-ufoFile = "UFOS/UFOS-utf8-small.csv"
+ufoFile = "UFOS/UFOS-utf8-large.csv"
 
 """
 Menu principal
@@ -393,7 +393,7 @@ while True:
                          totalRangoSecond)
 
     elif int(inputs[0]) == 3:
-        print("\n" + "-"*23 + " Req 4. Inputs " + "-"*24)
+        print("\n" + "-"*23 + " Req 3. Inputs " + "-"*24)
         tiempo1 = input("Indique la hora inicial con la que desea"
                         " iniciar el rango: ")
         tiempo2 = input("Indique la hora final con la que desea"
@@ -472,7 +472,7 @@ while True:
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
         printGeoUfos(total, geoUfos)
-        print(Mapa[2])
+        
 
     else:
         sys.exit(0)
