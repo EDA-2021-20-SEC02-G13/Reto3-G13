@@ -254,13 +254,23 @@ def newMap(catalog, log1, log2, lat1, lat2):
     tplGeo = getGeographicInfo(catalog, log1, log2, lat1, lat2)
     total = tplGeo[0]
     geoUfos = tplGeo[1]
-    for ele in lt.iterator(geoUfos):
+    Primeros_5 = lt.subList(geoUfos,1,5)
+    Ultimos_5 = lt.subList(geoUfos,-1,5)
+    for ele in lt.iterator(Primeros_5):
         lt.addLast(Lista_Latitudes, ele['latitude'])
         lt.addLast(Lista_Longitudes, ele['longitude'])
         lt.addLast(Lista_Ciudades, ele['city'])
         lt.addLast(Lista_DateTimes, ele['datetime'])
         lt.addLast(Lista_Objeto, ele['shape'])
         lt.addLast(Lista_Duracion, ele['duration (seconds)'])
+    for ele in lt.iterator(Ultimos_5):
+        lt.addLast(Lista_Latitudes, ele['latitude'])
+        lt.addLast(Lista_Longitudes, ele['longitude'])
+        lt.addLast(Lista_Ciudades, ele['city'])
+        lt.addLast(Lista_DateTimes, ele['datetime'])
+        lt.addLast(Lista_Objeto, ele['shape'])
+        lt.addLast(Lista_Duracion, ele['duration (seconds)'])
+    
     x = float(lt.getElement(Lista_Latitudes, 1))
     y = float(lt.getElement(Lista_Longitudes, 1))
     # Generar Mapa

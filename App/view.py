@@ -334,7 +334,7 @@ def printMenu():
 # Menu principal
 
 catalog = None
-ufoFile = "UFOS/UFOS-utf8-large.csv"
+ufoFile = "UFOS/UFOS-utf8-small.csv"
 
 """
 Menu principal
