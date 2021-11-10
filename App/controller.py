@@ -100,9 +100,10 @@ def getGeographicInfo(catalog, log1, log2, lat1, lat2):
     """
     return model.getGeographicInfo(catalog, log1, log2, lat1, lat2)
 
+
 def getMap(catalog, log1, log2, lat1, lat2):
     """
-    Obtiene el mapa de los avistamientos de una zona geografica, definida por la
-    longitud y latitud de los parametros
+    Obtiene el mapa de los avistamientos de una zona geografica, definida por
+    la longitud y latitud de los parametros
     """
     return model.newMap(catalog, log1, log2, lat1, lat2)

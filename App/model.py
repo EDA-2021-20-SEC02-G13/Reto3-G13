@@ -240,6 +240,7 @@ def newLatitudelist():
     latentry["ltLatitude"] = lt.newList("ARRAY_LIST")
     return latentry
 
+
 def newMap(catalog, log1, log2, lat1, lat2):
     """
     Crea un mapa para modelar los avistamientos
@@ -283,7 +284,7 @@ def newMap(catalog, log1, log2, lat1, lat2):
             cl = 'purple'
             folium.Marker([coor1, coor2], popup=popup,
                           tooltip="<strong>"+str(info)+"<strong>",
-                          icon=folium.Icon(icon=ic, color=cl)).add_to(mapa) 
+                          icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
             contador += 1
     ct = 0
     for pos in reversed(range(1, lt.size(Lista_Latitudes)+1)):
@@ -308,7 +309,8 @@ def newMap(catalog, log1, log2, lat1, lat2):
 
         # Guardar Mapa
         mapa.save('map.html')
-    return total,geoUfos,Lista_Ciudades  
+    return total, geoUfos, Lista_Ciudades
+
 
 # Funciones de consulta
 

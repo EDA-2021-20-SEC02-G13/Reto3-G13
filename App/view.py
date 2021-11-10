@@ -23,7 +23,6 @@
 import config as cf
 import sys
 import time
-import folium
 import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import orderedmap as om
@@ -472,7 +471,6 @@ while True:
         elapsed_time_mseg = round((stop_time - start_time)*1000, 2)
         print("Tiempo:", elapsed_time_mseg, "mseg")
         printGeoUfos(total, geoUfos)
-        
 
     else:
         sys.exit(0)
