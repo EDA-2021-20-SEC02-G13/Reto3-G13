@@ -126,8 +126,8 @@ def updateTimeIndex(timeIndex, ufo):
     Revisa si existe o no la hora en el mapa. En base a esto, crea una
     nueva estructura para modelarla, o la adiciona a la lista de avistamientos
     """
-    time = ufo["datetime"]
-    ufoTime = datetime.datetime.strptime(time, "%Y-%m-%d %H:%M:%S")
+    time = ufo["datetime"][11:]
+    ufoTime = datetime.datetime.strptime(time, "%H:%M:%S")
     entry = om.get(timeIndex, ufoTime.time())
     if entry is None:
         datentry = newTime()
@@ -390,8 +390,7 @@ def getTimeInfo(catalog, tiempo1, tiempo2):
     for lista in lt.iterator(ltRango1):
         for ufo in lt.iterator(lista["ltTiempo"]):
             lt.addLast(ltRango2, ufo)
-    ltRango3 = sortDateUfos(ltRango2, lt.size(ltRango2))
-    return menor, total, ltRango3, lt.size(ltRango2)
+    return menor, total, ltRango2, lt.size(ltRango2)
 
 
 def getDateInfo(catalog, fecha1, fecha2):
