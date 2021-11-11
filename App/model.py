@@ -32,6 +32,7 @@ from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
+from DISClib.Algorithms.Sorting import insertionsort as ins
 assert cf
 
 """
@@ -276,9 +277,7 @@ def newMap(catalog, log1, log2, lat1, lat2):
     # Generar Mapa
     mapa = folium.Map(location=[x, y], zoom_start=7)
     # Marcas de Avistamientos
-    contador = 0
     for pos in range(1, lt.size(Lista_Latitudes)+1):
-        if contador <= 5:
             coor1 = lt.getElement(Lista_Latitudes, pos)
             coor2 = lt.getElement(Lista_Longitudes, pos)
             a = lt.getElement(Lista_Ciudades, pos)
@@ -295,30 +294,8 @@ def newMap(catalog, log1, log2, lat1, lat2):
             folium.Marker([coor1, coor2], popup=popup,
                           tooltip="<strong>"+str(info)+"<strong>",
                           icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
-            contador += 1
-    ct = 0
-    for pos in reversed(range(1, lt.size(Lista_Latitudes)+1)):
-        if ct <= 5:
-            coor1 = lt.getElement(Lista_Latitudes, pos)
-            coor2 = lt.getElement(Lista_Longitudes, pos)
-            a = lt.getElement(Lista_Ciudades, pos)
-            b = lt.getElement(Lista_DateTimes, pos)
-            info = 'Ciudad: ' + str(a) + ' Fecha del avistamiento: ' + str(b)
-            c = str(lt.getElement(Lista_Objeto, pos))
-            d = str(lt.getElement(Lista_Duracion, pos))
-            sent1 = 'El objeto tenia una forma de: '
-            moreInfo = sent1 + c + ' y fue visto durante: ' + d + ' segs'
-            iframe = folium.IFrame(moreInfo)
-            popup = folium.Popup(iframe, min_width=250, max_width=250)
-            ic = 'info-sign'
-            cl = 'blue'
-            folium.Marker([coor1, coor2], popup=popup,
-                          tooltip="<strong>"+str(info)+"<strong>",
-                          icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
-            ct += 1
-
         # Guardar Mapa
-        mapa.save('map.html')
+    mapa.save('map.html')
     return total, geoUfos, Lista_Ciudades
 
 
@@ -384,13 +361,14 @@ def getTimeInfo(catalog, tiempo1, tiempo2):
     mapFechas = catalog["timeIndex"]
     total = lt.size(om.keySet(mapFechas))
     menor = om.maxKey(mapFechas)
-
     ltRango1 = om.values(mapFechas, t1, t2)
     ltRango2 = lt.newList("ARRAY_LIST")
     for lista in lt.iterator(ltRango1):
         for ufo in lt.iterator(lista["ltTiempo"]):
+            datetime.datetime.strptime(ufo["datetime"], "%Y-%m-%d %H:%M:%S").date()
             lt.addLast(ltRango2, ufo)
-    return menor, total, ltRango2, lt.size(ltRango2)
+    ltRango3 = sortTimeUfos(ltRango2, lt.size(ltRango2))
+    return menor, total, ltRango3, lt.size(ltRango3)
 
 
 def getDateInfo(catalog, fecha1, fecha2):
@@ -412,7 +390,7 @@ def getDateInfo(catalog, fecha1, fecha2):
         for ufo in lt.iterator(lista["ltFecha"]):
             lt.addLast(ltRango2, ufo)
     ltRango3 = sortDateUfos(ltRango2, lt.size(ltRango2))
-    return menor, totalMenor, total, ltRango3, lt.size(ltRango2)
+    return menor, totalMenor, total, ltRango3, lt.size(ltRango3)
 
 
 def getGeographicInfo(catalog, log1, log2, lat1, lat2):
@@ -461,6 +439,21 @@ def cmpUfoByDate(ufo1, ufo2):
     date2 = datetime.datetime.strptime(ufo2["datetime"], "%Y-%m-%d %H:%M:%S")
     return date1 < date2
 
+def cmpUfoByTime(ufo1, ufo2):
+    """
+    Devuelve verdadero (True) si el "Time" de ufo1 es menor que el de ufo2
+    Args:
+        ufo1: informacion del primer avistamiento que
+              incluye su valor "datetime"
+        ufo2: informacion del segundo avistamiento que
+              incluye su valor "datetime"
+    """
+    t1 = ufo1['datetime'][11:]
+    t2 = ufo2['datetime'][11:]
+    if t1 == t2:
+        t1 = ufo1["datetime"][:10]
+        t2 = ufo2["datetime"][:10]
+    return t1 < t2
 
 def cmpUfoBySecond(ufo1, ufo2):
     """
@@ -560,6 +553,14 @@ def sortDateUfos(ufos, sizeUfos):
     sorted_list = ms.sort(sub_list, cmpUfoByDate)
     return sorted_list
 
+def sortTimeUfos(ufos, sizeUfos):
+    """
+    Ordena los avistamientos por su fecha
+    """
+    sub_list = lt.subList(ufos, 1, sizeUfos)
+    sub_list = sub_list.copy()
+    sorted_list = ms.sort(sub_list, cmpUfoByTime)
+    return sorted_list
 
 def sortSecondUfos(ufos, sizeUfos):
     """

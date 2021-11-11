@@ -411,6 +411,8 @@ while True:
         printTimessUfos(tiempo1, tiempo2, total, menor, ltRangoFecha,
                         totalRangoFecha)
         
+        
+        
 
     elif int(inputs[0]) == 4:
         print("\n" + "-"*23 + " Req 4. Inputs " + "-"*24)
