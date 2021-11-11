@@ -256,7 +256,7 @@ def newMap(catalog, log1, log2, lat1, lat2):
     total = tplGeo[0]
     geoUfos = tplGeo[1]
     Primeros_5 = lt.subList(geoUfos,1,5)
-    Ultimos_5 = lt.subList(geoUfos,-1,5)
+    Ultimos_5 = lt.subList(geoUfos,lt.size(geoUfos)-5,5)
     for ele in lt.iterator(Primeros_5):
         lt.addLast(Lista_Latitudes, ele['latitude'])
         lt.addLast(Lista_Longitudes, ele['longitude'])
@@ -271,30 +271,29 @@ def newMap(catalog, log1, log2, lat1, lat2):
         lt.addLast(Lista_DateTimes, ele['datetime'])
         lt.addLast(Lista_Objeto, ele['shape'])
         lt.addLast(Lista_Duracion, ele['duration (seconds)'])
-    
     x = float(lt.getElement(Lista_Latitudes, 1))
     y = float(lt.getElement(Lista_Longitudes, 1))
     # Generar Mapa
     mapa = folium.Map(location=[x, y], zoom_start=7)
     # Marcas de Avistamientos
     for pos in range(1, lt.size(Lista_Latitudes)+1):
-            coor1 = lt.getElement(Lista_Latitudes, pos)
-            coor2 = lt.getElement(Lista_Longitudes, pos)
-            a = lt.getElement(Lista_Ciudades, pos)
-            b = lt.getElement(Lista_DateTimes, pos)
-            info = 'Ciudad: ' + str(a) + ' Fecha del avistamiento: ' + str(b)
-            c = str(lt.getElement(Lista_Objeto, pos))
-            d = str(lt.getElement(Lista_Duracion, pos))
-            sent1 = 'El objeto tenia una forma de: '
-            moreInfo = sent1 + c + ' y fue visto durante: ' + d + ' segs'
-            iframe = folium.IFrame(moreInfo)
-            popup = folium.Popup(iframe, min_width=250, max_width=250)
-            ic = 'info-sign'
-            cl = 'purple'
-            folium.Marker([coor1, coor2], popup=popup,
-                          tooltip="<strong>"+str(info)+"<strong>",
-                          icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
-        # Guardar Mapa
+        coor1 = lt.getElement(Lista_Latitudes, pos)
+        coor2 = lt.getElement(Lista_Longitudes, pos)
+        a = lt.getElement(Lista_Ciudades, pos)
+        b = lt.getElement(Lista_DateTimes, pos)
+        info = 'Ciudad: ' + str(a) + ' Fecha del avistamiento: ' + str(b)
+        c = str(lt.getElement(Lista_Objeto, pos))
+        d = str(lt.getElement(Lista_Duracion, pos))
+        sent1 = 'El objeto tenia una forma de: '
+        moreInfo = sent1 + c + ' y fue visto durante: ' + d + ' segs'
+        iframe = folium.IFrame(moreInfo)
+        popup = folium.Popup(iframe, min_width=250, max_width=250)
+        ic = 'info-sign'
+        cl = 'purple'
+        folium.Marker([coor1, coor2], popup=popup,
+                        tooltip="<strong>"+str(info)+"<strong>",
+                        icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
+    # Guardar Mapa
     mapa.save('map.html')
     return total, geoUfos, Lista_Ciudades
 
