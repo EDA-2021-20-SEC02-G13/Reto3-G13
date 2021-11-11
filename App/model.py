@@ -32,7 +32,6 @@ from DISClib.ADT import map as mp
 from DISClib.ADT import orderedmap as om
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import mergesort as ms
-from DISClib.Algorithms.Sorting import insertionsort as ins
 assert cf
 
 """
@@ -255,8 +254,8 @@ def newMap(catalog, log1, log2, lat1, lat2):
     tplGeo = getGeographicInfo(catalog, log1, log2, lat1, lat2)
     total = tplGeo[0]
     geoUfos = tplGeo[1]
-    Primeros_5 = lt.subList(geoUfos,1,5)
-    Ultimos_5 = lt.subList(geoUfos,lt.size(geoUfos)-5,5)
+    Primeros_5 = lt.subList(geoUfos, 1, 5)
+    Ultimos_5 = lt.subList(geoUfos, lt.size(geoUfos)-5, 5)
     for ele in lt.iterator(Primeros_5):
         lt.addLast(Lista_Latitudes, ele['latitude'])
         lt.addLast(Lista_Longitudes, ele['longitude'])
@@ -291,8 +290,8 @@ def newMap(catalog, log1, log2, lat1, lat2):
         ic = 'info-sign'
         cl = 'purple'
         folium.Marker([coor1, coor2], popup=popup,
-                        tooltip="<strong>"+str(info)+"<strong>",
-                        icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
+                      tooltip="<strong>"+str(info)+"<strong>",
+                      icon=folium.Icon(icon=ic, color=cl)).add_to(mapa)
     # Guardar Mapa
     mapa.save('map.html')
     return total, geoUfos, Lista_Ciudades
@@ -364,7 +363,8 @@ def getTimeInfo(catalog, tiempo1, tiempo2):
     ltRango2 = lt.newList("ARRAY_LIST")
     for lista in lt.iterator(ltRango1):
         for ufo in lt.iterator(lista["ltTiempo"]):
-            datetime.datetime.strptime(ufo["datetime"], "%Y-%m-%d %H:%M:%S").date()
+            uf = ufo["datetime"]
+            datetime.datetime.strptime(uf, "%Y-%m-%d %H:%M:%S").date()
             lt.addLast(ltRango2, ufo)
     ltRango3 = sortTimeUfos(ltRango2, lt.size(ltRango2))
     return menor, total, ltRango3, lt.size(ltRango3)
@@ -438,6 +438,7 @@ def cmpUfoByDate(ufo1, ufo2):
     date2 = datetime.datetime.strptime(ufo2["datetime"], "%Y-%m-%d %H:%M:%S")
     return date1 < date2
 
+
 def cmpUfoByTime(ufo1, ufo2):
     """
     Devuelve verdadero (True) si el "Time" de ufo1 es menor que el de ufo2
@@ -453,6 +454,7 @@ def cmpUfoByTime(ufo1, ufo2):
         t1 = ufo1["datetime"][:10]
         t2 = ufo2["datetime"][:10]
     return t1 < t2
+
 
 def cmpUfoBySecond(ufo1, ufo2):
     """
@@ -552,6 +554,7 @@ def sortDateUfos(ufos, sizeUfos):
     sorted_list = ms.sort(sub_list, cmpUfoByDate)
     return sorted_list
 
+
 def sortTimeUfos(ufos, sizeUfos):
     """
     Ordena los avistamientos por su fecha
@@ -560,6 +563,7 @@ def sortTimeUfos(ufos, sizeUfos):
     sub_list = sub_list.copy()
     sorted_list = ms.sort(sub_list, cmpUfoByTime)
     return sorted_list
+
 
 def sortSecondUfos(ufos, sizeUfos):
     """
